@@ -1,7 +1,23 @@
-import {NextRequest,NextResponse} from 'next/server';
-export async function GET(req:NextRequest){const q=req.nextUrl.searchParams.get('q')?.trim(); if(!q)return NextResponse.json({items:[]});
- const url=`https://images-api.nasa.gov/search?q=${encodeURIComponent(q)}&media_type=image&page_size=12`;
- const r=await fetch(url,{next:{revalidate:3600}}); if(!r.ok)return NextResponse.json({items:[]},{status:502}); const d=await r.json();
- const items=(d.collection?.items||[]).map((i:any)=>({title:i.data?.[0]?.title||'NASA image',description:i.data?.[0]?.description||'',date:i.data?.[0]?.date_created||null,href:i.links?.find((l:any)=>l.rel==='preview')?.href||i.links?.[0]?.href||null,source:'NASA Image and Video Library'})).filter((x:any)=>x.href);
- return NextResponse.json({items});
+import { NextResponse } from 'next/server';
+
+const NASA_IMAGES = 'https://images-api.nasa.gov/search';
+
+export async function GET(request: Request) {
+  const q = new URL(request.url).searchParams.get('q')?.trim() || '';
+  if (!q) return NextResponse.json({ items: [] });
+  const url = `${NASA_IMAGES}?q=${encodeURIComponent(q)}&media_type=image&page_size=12`;
+  const r = await fetch(url, { next: { revalidate: 3600 } });
+  if (!r.ok) return NextResponse.json({ items: [] }, { status: 502 });
+  const data = await r.json();
+  const items = (data?.collection?.items || []).slice(0, 12).map((item: any) => ({
+    nasaId: item?.data?.[0]?.nasa_id,
+    title: item?.data?.[0]?.title,
+    description: item?.data?.[0]?.description,
+    date: item?.data?.[0]?.date_created,
+    href: item?.links?.find((l: any) => l.rel === 'preview')?.href || item?.links?.find((l: any) => l.rel === 'image')?.href,
+    sourceUrl: item?.href,
+    center: item?.data?.[0]?.center,
+    photographer: item?.data?.[0]?.photographer,
+  })).filter((x: any) => x.href);
+  return NextResponse.json({ items });
 }

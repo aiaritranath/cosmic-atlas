@@ -1,34 +1,38 @@
-# COSMIC ATLAS — Vercel Edition
+# COSMIC ATLAS — Vercel Edition v2
 
-A scientifically responsible interactive astronomical atlas. This Vercel MVP queries real public astronomy services server-side and never exposes provider credentials in the browser.
+A scientifically responsible interactive 3D atlas of known and catalogued astronomical objects.
 
-## Live data sources
-- NASA Exoplanet Archive TAP (`ps` / Planetary Systems)
-- SIMBAD / CDS TAP for astronomical object resolution
-- NASA Image and Video Library for media search
+## What changed in v2
+- Expanded 3D scene: Solar System, nearby stars, nebulae, star clusters, galaxies, quasars and black-hole visualizations.
+- Logarithmic visual navigation across astronomical scales.
+- Real public-data search through the NASA Exoplanet Archive and SIMBAD/CDS.
+- NASA Image and Video Library media search with source metadata.
+- Explicit separation between catalogue observations and procedural 3D visualization.
+- Layer controls for major celestial object families.
+- Mobile layout optimized for touch.
+
+## Scientific responsibility
+The 3D background and object renderings are visualization layers, not telescope photographs. Real catalogue records should retain their source and unknown values are not invented. SIMBAD provides object identification and basic astronomical data; it is not itself a replacement for every specialized catalogue. Use authoritative specialized catalogues for ingestion at scale.
 
 ## Deploy to Vercel
-1. Push this folder to GitHub.
-2. Import the repository in Vercel.
-3. Framework: Next.js (auto-detected).
-4. No database or secret is required for the current public-data MVP.
-5. Deploy.
+1. Push this repository to GitHub.
+2. Import it into Vercel.
+3. Keep the framework as Next.js.
+4. Deploy.
+
+No secret is required for the current public-data MVP.
 
 ## Local development
 ```bash
 npm install
 npm run dev
 ```
-Open http://localhost:3000.
+Then open http://localhost:3000.
 
 ## API
 - `GET /api/search?q=andromeda`
 - `GET /api/object/{name}`
 - `GET /api/images?q=Orion%20Nebula`
 
-## Scientific policy
-Procedural stars are explicitly visualization-only. Catalogue records come from external scientific services. Unknown values are not invented. Image results are media references and should retain their source metadata/credits.
-
-## Next scale-up
-For millions of records, add managed PostgreSQL/PostGIS, scheduled ingestion, object identity resolution, spatial indexes, object storage/CDN, and viewport-based streaming. Keep external source URL, catalogue ID, provenance, and synchronization timestamps on every imported record.
-# cosmic-atlas
+## Data sources
+NASA Exoplanet Archive TAP; SIMBAD/CDS; NASA Image and Video Library.
