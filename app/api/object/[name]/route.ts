@@ -1,0 +1,3 @@
+import {NextRequest,NextResponse} from 'next/server';
+import {nasaExoplanets,simbad} from '@/lib/catalogs';
+export async function GET(req:NextRequest,{params}:{params:Promise<{name:string}>}){const {name}=await params; const q=decodeURIComponent(name); const [a,b]=await Promise.allSettled([nasaExoplanets(q,1),simbad(q,1)]); const obj=a.status==='fulfilled'&&a.value[0]?a.value[0]:b.status==='fulfilled'&&b.value[0]?b.value[0]:null; if(!obj)return NextResponse.json({error:'Object not found'},{status:404}); return NextResponse.json(obj,{headers:{'Cache-Control':'s-maxage=900, stale-while-revalidate=3600'}})}
